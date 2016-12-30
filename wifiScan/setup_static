@@ -1,0 +1,13 @@
+!#/bin/bash
+
+#what is the  network mask of wlan0
+echo 'network mask wlan0'
+ip -4 addr show dev wlan0 | grep inet  | awk '{print $2}'
+
+#what is the default gateway
+echo 'default gateway'
+ip route | grep  default | awk '{print $3}'
+
+#what are the dns nameservers
+cat /etc/resolv.conf
+

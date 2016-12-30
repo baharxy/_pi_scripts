@@ -1,0 +1,46 @@
+#!/bin/bash
+#file name 
+_today=`date  "+%Y%m%d"`
+_file="/home/pi/Data/WiFiScan/$_today.txt"
+_pcap_file="Data/$_today.cap"
+echo $_file
+#sudo ./chanhop.sh &  sudo ./capture.sh >  $_file
+
+
+#check if the device is  in monitor mode or not
+is_monitor= iw dev | grep "Interface" | grep "mon0"
+if [ -z is_monitor ]; then 
+  # restart ntp 
+  sudo service ntp restart 
+  # set to Monitor Mode
+  echo  "setting to monitor mode"
+  arr=$(sudo ./setMonitor)
+else
+  echo "setting to managed mode to scan  WiFi  channels"
+  sudo  ./setManaged
+  sleep 3 
+  #restart ntp
+  sudo service ntp restart
+  arr=(`sudo  iw dev wlan0 scan | grep freq: | awk '{print $2}' | sort | uniq  `)
+  echo "set back to Monitor mode"
+  #enable monitor mod
+  sudo iw phy phy0 interface add mon0 type monitor
+  #set monitor mode up
+  #echo "Bringing up monitor mode"
+  sudo ifconfig mon0 up
+  #echo "setting down wlan1"
+  sudo ifconfig wlan0 down
+
+fi    
+
+echo  ${arr[*]}
+
+# Alternative  method for less cpu usage,***** remmember to set the filter to broadcast if you wanted to use this one
+sudo ./chanhop.sh  "${arr[@]}"    &   sudo tcpdump  -i mon0  -n  -w  $_pcap_file  
+
+
+=======
+_file="$_today.txt"
+echo $_file
+sudo ./chanhop.sh &  sudo ./capture.sh >  $_file
+>>>>>>> 434300c5460113dc93384a4480a4b729ff39cd3d
