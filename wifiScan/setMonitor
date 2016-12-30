@@ -14,12 +14,11 @@ sudo iw phy phy0 interface add mon0 type monitor
 #set monitor mode up
 #echo "Bringing up monitor mode"
 ifconfig mon0 up
-<<<<<<< HEAD
+
 #echo "setting down wlan1"
 ifconfig wlan0 down
-=======
+
 echo "setting down wlan0"
 sudo iw dev wlan0 del
->>>>>>> 434300c5460113dc93384a4480a4b729ff39cd3d
 
 

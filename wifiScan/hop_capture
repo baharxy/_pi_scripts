@@ -2,7 +2,7 @@
 #file name 
 _today=`date  "+%Y%m%d"`
 _file="/home/pi/Data/WiFiScan/$_today.txt"
-_pcap_file="Data/$_today.cap"
+_pcap_file="/home/pi/Data/$_today.cap"
 echo $_file
 #sudo ./chanhop.sh &  sudo ./capture.sh >  $_file
 
@@ -39,8 +39,3 @@ echo  ${arr[*]}
 sudo ./chanhop.sh  "${arr[@]}"    &   sudo tcpdump  -i mon0  -n  -w  $_pcap_file  
 
 
-=======
-_file="$_today.txt"
-echo $_file
-sudo ./chanhop.sh &  sudo ./capture.sh >  $_file
->>>>>>> 434300c5460113dc93384a4480a4b729ff39cd3d

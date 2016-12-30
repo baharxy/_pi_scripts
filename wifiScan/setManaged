@@ -1,7 +1,6 @@
 #!/bin/bash
 sudo ifconfig mon0 down 
 sudo iw dev mon0 del
-<<<<<<< HEAD
 sudo iw phy phy0 interface add wlan0 type managed
 sudo ifdown wlan0
 sudo ifup wlan0
@@ -9,8 +8,3 @@ sudo ifup wlan0
 iw dev
 
 
-=======
-sudo iw phy phy1 interface add wlan0 type managed
-iw dev
-ifconfig wlan0 up
->>>>>>> 434300c5460113dc93384a4480a4b729ff39cd3d
