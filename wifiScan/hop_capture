@@ -1,6 +1,6 @@
 #!/bin/bash
 #file name 
-_today=`date  "+%Y%m%d"`
+_today=`date  "+%Y%m%d_%H%M%S"`
 _file="/home/pi/Data/WiFiScan/$_today.txt"
 _pcap_file="/home/pi/Data/WiFiScan/$_today.cap"
 echo $_file
