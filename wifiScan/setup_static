@@ -54,7 +54,7 @@ EOF
   exit 0
 }
 
-file="./test"
+file="/etc/network/interfaces"
 if [ ! -f $file ]; then
   echo ""
   echo "The file '$file' doesn't exist!"
@@ -82,3 +82,12 @@ while true; do
         * ) echo "Pleas enter y or n!";;
   esac
 done
+
+
+
+echo "My IP address is going to be:  $staticip" | mail -s RPI_IP  baharp@mit.edu
+
+
+sleep 10
+
+sudo reboot
