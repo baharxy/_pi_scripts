@@ -1,13 +1,84 @@
-!#/bin/bash
+#!/bin/bash
+
 
 #what is the  network mask of wlan0
 echo 'network mask wlan0'
-ip -4 addr show dev wlan0 | grep inet  | awk '{print $2}'
+WIFI_IP_ADDR_MASK=$(ip -4 addr show dev wlan0 | grep inet  | awk '{print $2}')
+
+staticip=$(echo $WIFI_IP_ADDR_MASK | awk -F'/' '{print $1}')
 
 #what is the default gateway
 echo 'default gateway'
-ip route | grep  default | awk '{print $3}'
+routerip=$(ip route | grep  default | awk '{print $3}')
+
+#what is the netmask
+netmask=$(ipcalc $WIFI_IP_ADDR_MASK | grep Netmask | awk -F'[ \t]+' '{print $2}')
 
 #what are the dns nameservers
-cat /etc/resolv.conf
+#cat /etc/resolv.conf
 
+
+writeinterfacefile()
+{ 
+cat << EOF > $1 
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto eth0
+allow-hotplug eth0
+iface eth0 inet static
+address 192.168.20.12
+netmask 255.255.255.0
+network 192.168.0.0
+broadcast 192.168.20.255
+gateway 192.168.0.1
+
+#auto wlan0
+allow-hotplug wlan0
+#iface wlan0 inet dhcp
+iface wlan0 inet static
+address  $staticip
+netmask $netmask
+gateway $routerip
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+dns-nameservers 8.8.8.8 8.8.4.4 
+EOF
+#don't use any space before of after 'EOF' in the previous line
+
+  echo ""
+  echo "Your informatons was saved in '$1' file."
+  echo ""
+  exit 0
+}
+
+file="./test"
+if [ ! -f $file ]; then
+  echo ""
+  echo "The file '$file' doesn't exist!"
+  echo ""
+  exit 1
+fi
+
+clear
+echo "Let's set up a static ip address for wlan0"
+echo ""
+
+
+echo ""
+echo "So your settings are:"
+echo "gayeway address  is:   $routerip"
+echo "Netmask  is: $netmask"
+echo "Ip address is:   $staticip"
+echo ""
+
+while true; do
+  read -p "Are these informations correct? [y/n]: " yn 
+  case $yn in
+    [Yy]* ) writeinterfacefile $file;;
+    [Nn]* ) getinfo;;
+        * ) echo "Pleas enter y or n!";;
+  esac
+done
