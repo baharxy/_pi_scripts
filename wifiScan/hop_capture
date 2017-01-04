@@ -3,7 +3,7 @@
 _today=`date  "+%Y%m%d_%H%M%S"`
 _file="/home/pi/Data/WiFiScan/$_today.txt"
 _pcap_file="/home/pi/Data/WiFiScan/$_today.cap"
-echo $_file
+#echo $_file
 #sudo ./chanhop.sh &  sudo ./capture.sh >  $_file
 
 
@@ -24,7 +24,7 @@ else
   arr=(`sudo  iw dev wlan0 scan | grep freq: | awk '{print $2}' | sort | uniq  `)
   echo "set back to Monitor mode"
   #enable monitor mod
-  sudo iw phy phy0 interface add mon0 type monitor
+  sudo iw phy phy1 interface add mon0 type monitor
   #set monitor mode up
   #echo "Bringing up monitor mode"
   sudo ifconfig mon0 up

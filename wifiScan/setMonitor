@@ -9,16 +9,16 @@ echo  ${arr[*]}
 
 
 #enable monitor mod
-sudo iw phy phy0 interface add mon0 type monitor
+sudo iw phy phy1 interface add mon0 type monitor
 
 #set monitor mode up
 #echo "Bringing up monitor mode"
-ifconfig mon0 up
+sudo ifconfig mon0 up
 
 #echo "setting down wlan1"
-ifconfig wlan0 down
+sudo ifconfig wlan0 down
 
-echo "setting down wlan0"
-sudo iw dev wlan0 del
+#echo "setting down wlan0"
+#sudo iw dev wlan0 del
 
 
