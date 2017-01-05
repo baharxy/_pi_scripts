@@ -8,3 +8,18 @@ sudo ifup wlan0
 iw dev
 
 
+metric=$(sudo  ip route show | grep default | grep metric)
+
+
+if [ -n $metric ]; then
+x=$(sudo  ip route show | grep default)
+sudo ip route del  $x
+fi
+
+sleep 1
+
+WIFI_IP_ADDR_MASK=$(ip -4 addr show dev wlan0 | grep inet  | awk '{print $2}')
+staticip=$(echo $WIFI_IP_ADDR_MASK | awk -F'/' '{print $1}')
+
+echo "My IP address is going to  be:  $staticip" | mail -s RPI_IP  baharp@mit.edu
+
