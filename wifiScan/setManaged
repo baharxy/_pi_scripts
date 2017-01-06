@@ -9,10 +9,10 @@ iw dev
 
 
 metric=$(sudo  ip route show | grep default | grep metric)
+first_elem= $($metric | awk '{print$1}')
 
-
-if [ -n $metric ]; then
-x=$(sudo  ip route show | grep default)
+if [ -n $first_elem ]; then
+x=$(sudo  ip route show | grep default| grep metric)
 sudo ip route del  $x
 fi
 
