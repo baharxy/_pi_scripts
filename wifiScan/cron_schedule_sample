@@ -33,9 +33,12 @@
 # └───────────────────────── min (0 - 59)
 
 
-20  16  *   *  *   cd _pi_scripts_clone/wifiScan/ && sudo ./hop_capture  &
-50   16  *  *  * sudo killall  chanhop.sh  & sudo killall tcpdump
-#@reboot sudo ./hop_capture
+0  7   *  *  *   cd /home/pi/_pi_scripts/wifiScan/ && git clone https://github.com/baharxy/_pi_scripts.git
+0  16   *  *  *   cd /home/pi/_pi_scripts/wifiScan/ && sudo ./hop_capture  &
+0   18  *  *  *   sudo killall  chanhop.sh  & sudo killall tcpdump
+10  18  *  *  *   cd /home/pi/_pi_scripts/wifiScan/ && sudo ./setManaged
+
+
 
 
 
