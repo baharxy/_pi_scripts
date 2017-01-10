@@ -1,0 +1,63 @@
+#!/bin/bash
+#file name 
+_today=`date  "+%Y%m%d_%H%M%S"`
+_pcap_file="/home/pi/lepton/$_today.cap"
+#echo $_file
+#sudo ./chanhop.sh &  sudo ./capture.sh >  $_file
+
+
+#get the name of the physical interfaces
+a=$(iw dev | grep  phy | cut -d '#' -f 1)
+b=$(iw dev | grep  phy | cut -d '#' -f 2)
+phy_name=$a$b
+
+
+
+#check if the device is  in monitor mode or not
+is_monitor= iw dev | grep "Interface" | grep "mon0"
+if [ -z is_monitor ]; then 
+  # restart ntp 
+  sudo service ntp restart 
+  #get the name of the wlan interface
+  wlan_name=$( iw dev | grep Interface | awk '{print$2}')
+
+  # set to Monitor Mode
+  echo  "setting to monitor mode"
+  #arr=(`sudo  iw dev $wlan_name  scan | grep freq: | awk '{print $2}' | sort | uniq  `)
+  echo "set back to Monitor mode"
+  #enable monitor mod
+  sudo iw phy $phy_name  interface add mon0 type monitor
+  #set monitor mode up
+  #echo "Bringing up monitor mode"
+  sudo ifconfig mon0 up
+  #echo "setting down wlan1"
+  sudo ifconfig $wlan_name  down
+else
+  echo "setting to managed mode to scan  WiFi  channels"
+  sudo  ./setManaged
+  sleep 3 
+  
+  #restart ntp
+  sudo service ntp restart
+
+  #get the name of the wlan interface
+  wlan_name=$( iw dev | grep Interface | awk '{print$2}')
+
+  #arr=(`sudo  iw dev $wlan_name  scan | grep freq: | awk '{print $2}' | sort | uniq  `)
+  echo "set back to Monitor mode"
+  #enable monitor mod
+  sudo iw phy $phy_name  interface add mon0 type monitor
+  #set monitor mode up
+  #echo "Bringing up monitor mode"
+  sudo ifconfig mon0 up
+  #echo "setting down wlan"
+  sudo ifconfig $wlan_name  down
+
+fi    
+
+#echo  ${arr[*]}
+
+# Alternative  method for less cpu usage,***** remmember to set the filter to broadcast if you wanted to use this one
+sudo ./chanhop_trashtruck.sh    &   sudo tcpdump  -i mon0  -n  -w  $_pcap_file  
+
+
